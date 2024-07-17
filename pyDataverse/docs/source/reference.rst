@@ -17,6 +17,7 @@ Access all of Dataverse APIs.
 
 .. automodule:: pyDataverse.api
    :members:
+   :special-members:
 
 
 Models Interface
@@ -45,3 +46,4 @@ Custom exceptions.
 
 .. automodule:: pyDataverse.exceptions
   :members:
+  :special-members:
