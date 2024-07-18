@@ -3,7 +3,7 @@ import uuid
 import pytest
 from httpx import Request
 
-from pyDataverse.authentication import ApiTokenAuth, OAuthBearerTokenAuth
+from pyDataverse.auth import ApiTokenAuth, BearerTokenAuth
 from pyDataverse.exceptions import ApiAuthorizationError
 
 
@@ -29,7 +29,7 @@ class TestBearerTokenAuth:
     def test_authorization_header_is_added_during_auth_flow(self):
         # Token as shown in RFC 6750
         bearer_token = "mF_9.B5f-4.1JqM"
-        auth = OAuthBearerTokenAuth(bearer_token)
+        auth = BearerTokenAuth(bearer_token)
         request = Request("GET", "https://example.org")
         assert "Authorization" not in request.headers
         modified_request = next(auth.auth_flow(request))
@@ -41,4 +41,4 @@ class TestBearerTokenAuth:
     )
     def test_raise_if_token_is_not_str(self, non_str_token):
         with pytest.raises(ApiAuthorizationError):
-            OAuthBearerTokenAuth(non_str_token)
+            BearerTokenAuth(non_str_token)

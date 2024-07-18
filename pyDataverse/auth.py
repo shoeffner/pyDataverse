@@ -16,7 +16,7 @@ class ApiTokenAuth(Auth):
     """
 
     def __init__(self, api_token: str):
-        """Initializes the authentication handler with an API token.
+        """Initializes the auth handler with an API token.
 
         Parameters
         ----------
@@ -55,16 +55,16 @@ class ApiTokenAuth(Auth):
         yield request
 
 
-class OAuthBearerTokenAuth(Auth):
-    """An authentication handler to add a Bearer token as defined in RFC 6750
-    to the request.
+class BearerTokenAuth(Auth):
+    """An authentication handler to add a Bearer token as defined in `RFC 6750
+    <https://datatracker.ietf.org/doc/html/rfc6750>`_ to the request.
 
-    A bearer token could be obtained from an OIDC provider, for example
+    A bearer token could be obtained from an OIDC provider, for example,
     Keycloak.
     """
 
     def __init__(self, bearer_token: str):
-        """Initializes the authentication handler with a bearer token.
+        """Initializes the auth handler with a bearer token.
 
         Parameters
         ----------
