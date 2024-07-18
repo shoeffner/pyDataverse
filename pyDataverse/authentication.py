@@ -53,3 +53,51 @@ class ApiTokenAuth(Auth):
         """
         request.headers["X-Dataverse-key"] = self.api_token
         yield request
+
+
+class OAuthBearerTokenAuth(Auth):
+    """An authentication handler to add a Bearer token as defined in RFC 6750
+    to the request.
+
+    A bearer token could be obtained from an OIDC provider, for example
+    Keycloak.
+    """
+
+    def __init__(self, bearer_token: str):
+        """Initializes the authentication handler with a bearer token.
+
+        Parameters
+        ----------
+        bearer_token : str
+            The bearer token retrieved from your OIDC provider.
+
+        Examples
+        --------
+
+            >>> import os
+            >>> from pyDataverse.api import DataAccessApi
+            >>> base_url = 'https://demo.dataverse.org'
+            >>> bearer_token_auth = OAuthBearerTokenAuth(os.getenv('OAUTH_TOKEN'))
+            >>> api = DataAccessApi(base_url, bearer_token_auth)
+
+        """
+        if not isinstance(bearer_token, str):
+            raise ApiAuthorizationError("Api token passed is not a string.")
+        self.bearer_token = bearer_token
+
+    def auth_flow(self, request: Request) -> Generator[Request, None, None]:
+        """Adds the X-Dataverse-key header with the API token and yields the
+        original :class:`httpx.Request`.
+
+        Parameters
+        ----------
+        request : httpx.Request
+            The request object which requires authentication headers
+
+        Yields
+        ------
+        httpx.Request
+            The original request with modified headers
+        """
+        request.headers["Authorization"] = f"Bearer {self.bearer_token}"
+        yield request

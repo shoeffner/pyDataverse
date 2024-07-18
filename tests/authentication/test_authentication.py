@@ -23,3 +23,22 @@ class TestApiTokenAuth:
     def test_raise_if_token_is_not_str(self, non_str_token):
         with pytest.raises(ApiAuthorizationError):
             ApiTokenAuth(non_str_token)
+
+
+class TestBearerTokenAuth:
+    def test_authorization_header_is_added_during_auth_flow(self):
+        # Token as shown in RFC 6750
+        bearer_token = "mF_9.B5f-4.1JqM"
+        auth = OAuthBearerTokenAuth(bearer_token)
+        request = Request("GET", "https://example.org")
+        assert "Authorization" not in request.headers
+        modified_request = next(auth.auth_flow(request))
+        assert "Authorization" in modified_request.headers
+        assert modified_request.headers["Authorization"] == f"Bearer {bearer_token}"
+
+    @pytest.mark.parametrize(
+        "non_str_token", (123, object(), lambda x: x, 1.423, b"123", uuid.uuid4())
+    )
+    def test_raise_if_token_is_not_str(self, non_str_token):
+        with pytest.raises(ApiAuthorizationError):
+            OAuthBearerTokenAuth(non_str_token)
