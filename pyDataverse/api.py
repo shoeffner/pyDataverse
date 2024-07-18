@@ -18,6 +18,8 @@ from pyDataverse.exceptions import (
     OperationFailedError,
 )
 
+DEPRECATION_GUARD = object()
+
 
 class Api:
     """Base class.
@@ -151,7 +153,7 @@ class Api:
         """
         return f"{self.__class__.__name__}: {self.base_url_api}"
 
-    def get_request(self, url, params=None, auth=False):
+    def get_request(self, url, params=None, auth=DEPRECATION_GUARD):
         """Make a GET request.
 
         Parameters
@@ -161,8 +163,18 @@ class Api:
         params : dict
             Dictionary of parameters to be passed with the request.
             Defaults to `None`.
-        auth : bool
-            Should an api token be sent in the request. Defaults to `False`.
+        auth : Any
+            .. deprecated:: 0.3.4
+                The auth parameter was ignored before version 0.3.4.
+                Please pass your auth to the Api instance directly, as
+                explained in :py:func:`Api.__init__`.
+                If you need multiple auth methods, create multiple
+                API instances:
+
+                .. code-block:: python
+
+                    api = Api("https://demo.dataverse.org", auth=ApiTokenAuth("my_api_token"))
+                    api_oauth = Api("https://demo.dataverse.org", auth=BearerTokenAuth("my_bearer_token"))
 
         Returns
         -------
@@ -170,6 +182,13 @@ class Api:
             Response object of requests library.
 
         """
+        if auth is not DEPRECATION_GUARD:
+            warn(
+                DeprecationWarning(
+                    "The auth parameter is deprecated. Please pass your auth "
+                    "arguments to the __init__ method instead."
+                )
+            )
         headers = {}
         headers["User-Agent"] = "pydataverse"
 
@@ -188,7 +207,9 @@ class Api:
                 params=params,
             )
 
-    def post_request(self, url, data=None, auth=False, params=None, files=None):
+    def post_request(
+        self, url, data=None, auth=DEPRECATION_GUARD, params=None, files=None
+    ):
         """Make a POST request.
 
         params will be added as key-value pairs to the URL.
@@ -199,10 +220,20 @@ class Api:
             Full URL.
         data : str
             Metadata as a json-formatted string. Defaults to `None`.
-        auth : bool
-            Should an api token be sent in the request. Defaults to `False`.
-        files: dict
-            e. g. files = {'file': open('sample_file.txt','rb')}
+        auth : Any
+            .. deprecated:: 0.3.4
+                The auth parameter was ignored before version 0.3.4.
+                Please pass your auth to the Api instance directly, as
+                explained in :py:func:`Api.__init__`.
+                If you need multiple auth methods, create multiple
+                API instances:
+
+                .. code-block:: python
+
+                    api = Api("https://demo.dataverse.org", auth=ApiTokenAuth("my_api_token"))
+                    api_oauth = Api("https://demo.dataverse.org", auth=BearerTokenAuth("my_bearer_token"))
+        files : dict
+            e.g. :code:`files={'file': open('sample_file.txt','rb')}`
         params : dict
             Dictionary of parameters to be passed with the request.
             Defaults to `None`.
@@ -213,6 +244,13 @@ class Api:
             Response object of requests library.
 
         """
+        if auth is not DEPRECATION_GUARD:
+            warn(
+                DeprecationWarning(
+                    "The auth parameter is deprecated. Please pass your auth "
+                    "arguments to the __init__ method instead."
+                )
+            )
         headers = {}
         headers["User-Agent"] = "pydataverse"
 
@@ -238,7 +276,7 @@ class Api:
                 files=files,
             )
 
-    def put_request(self, url, data=None, auth=False, params=None):
+    def put_request(self, url, data=None, auth=DEPRECATION_GUARD, params=None):
         """Make a PUT request.
 
         Parameters
@@ -247,8 +285,18 @@ class Api:
             Full URL.
         data : str
             Metadata as a json-formatted string. Defaults to `None`.
-        auth : bool
-            Should an api token be sent in the request. Defaults to `False`.
+        auth : Any
+            .. deprecated:: 0.3.4
+                The auth parameter was ignored before version 0.3.4.
+                Please pass your auth to the Api instance directly, as
+                explained in :py:func:`Api.__init__`.
+                If you need multiple auth methods, create multiple
+                API instances:
+
+                .. code-block:: python
+
+                    api = Api("https://demo.dataverse.org", auth=ApiTokenAuth("my_api_token"))
+                    api_oauth = Api("https://demo.dataverse.org", auth=BearerTokenAuth("my_bearer_token"))
         params : dict
             Dictionary of parameters to be passed with the request.
             Defaults to `None`.
@@ -259,6 +307,13 @@ class Api:
             Response object of requests library.
 
         """
+        if auth is not DEPRECATION_GUARD:
+            warn(
+                DeprecationWarning(
+                    "The auth parameter is deprecated. Please pass your auth "
+                    "arguments to the __init__ method instead."
+                )
+            )
         headers = {}
         headers["User-Agent"] = "pydataverse"
 
@@ -282,15 +337,25 @@ class Api:
                 params=params,
             )
 
-    def delete_request(self, url, auth=False, params=None):
+    def delete_request(self, url, auth=DEPRECATION_GUARD, params=None):
         """Make a Delete request.
 
         Parameters
         ----------
         url : str
             Full URL.
-        auth : bool
-            Should an api token be sent in the request. Defaults to `False`.
+        auth : Any
+            .. deprecated:: 0.3.4
+                The auth parameter was ignored before version 0.3.4.
+                Please pass your auth to the Api instance directly, as
+                explained in :py:func:`Api.__init__`.
+                If you need multiple auth methods, create multiple
+                API instances:
+
+                .. code-block:: python
+
+                    api = Api("https://demo.dataverse.org", auth=ApiTokenAuth("my_api_token"))
+                    api_oauth = Api("https://demo.dataverse.org", auth=BearerTokenAuth("my_bearer_token"))
         params : dict
             Dictionary of parameters to be passed with the request.
             Defaults to `None`.
@@ -301,6 +366,13 @@ class Api:
             Response object of requests library.
 
         """
+        if auth is not DEPRECATION_GUARD:
+            warn(
+                DeprecationWarning(
+                    "The auth parameter is deprecated. Please pass your auth "
+                    "arguments to the __init__ method instead."
+                )
+            )
         headers = {}
         headers["User-Agent"] = "pydataverse"
 
@@ -474,7 +546,7 @@ class DataAccessApi(Api):
         no_var_header=None,
         image_thumb=None,
         is_pid=True,
-        auth=False,
+        auth=DEPRECATION_GUARD,
     ):
         """Download a datafile via the Dataverse Data Access API.
 
@@ -527,7 +599,7 @@ class DataAccessApi(Api):
             url += "imageThumb={0}".format(image_thumb)
         return self.get_request(url, auth=auth)
 
-    def get_datafiles(self, identifier, data_format=None, auth=False):
+    def get_datafiles(self, identifier, data_format=None, auth=DEPRECATION_GUARD):
         """Download a datafile via the Dataverse Data Access API.
 
         Get by file id (HTTP Request).
@@ -555,7 +627,9 @@ class DataAccessApi(Api):
             url += "?format={0}".format(data_format)
         return self.get_request(url, auth=auth)
 
-    def get_datafile_bundle(self, identifier, file_metadata_id=None, auth=False):
+    def get_datafile_bundle(
+        self, identifier, file_metadata_id=None, auth=DEPRECATION_GUARD
+    ):
         """Download a datafile in all its formats.
 
         HTTP Request:
@@ -598,7 +672,7 @@ class DataAccessApi(Api):
             url += "?fileMetadataId={0}".format(file_metadata_id)
         return self.get_request(url, auth=auth)
 
-    def request_access(self, identifier, auth=True, is_filepid=False):
+    def request_access(self, identifier, auth=DEPRECATION_GUARD, is_filepid=False):
         """Request datafile access.
 
         This method requests access to the datafile whose id is passed on the behalf of an authenticated user whose key is passed. Note that not all datasets allow access requests to restricted files.
@@ -619,7 +693,9 @@ class DataAccessApi(Api):
             )
         return self.put_request(url, auth=auth)
 
-    def allow_access_request(self, identifier, do_allow=True, auth=True, is_pid=True):
+    def allow_access_request(
+        self, identifier, do_allow=True, auth=DEPRECATION_GUARD, is_pid=True
+    ):
         """Allow access request for datafiles.
 
         https://guides.dataverse.org/en/latest/api/dataaccess.html#allow-access-requests
@@ -642,7 +718,7 @@ class DataAccessApi(Api):
             data = "false"
         return self.put_request(url, data=data, auth=auth)
 
-    def grant_file_access(self, identifier, user, auth=False):
+    def grant_file_access(self, identifier, user, auth=DEPRECATION_GUARD):
         """Grant datafile access.
 
         https://guides.dataverse.org/en/4.18.1/api/dataaccess.html#grant-file-access
@@ -654,7 +730,7 @@ class DataAccessApi(Api):
         )
         return self.put_request(url, auth=auth)
 
-    def list_file_access_requests(self, identifier, auth=False):
+    def list_file_access_requests(self, identifier, auth=DEPRECATION_GUARD):
         """Liste datafile access requests.
 
         https://guides.dataverse.org/en/4.18.1/api/dataaccess.html#list-file-access-requests
@@ -687,7 +763,7 @@ class MetricsApi(Api):
         else:
             self.base_url_api_metrics = None
 
-    def total(self, data_type, date_str=None, auth=False):
+    def total(self, data_type, date_str=None, auth=DEPRECATION_GUARD):
         """
         GET https://$SERVER/api/info/metrics/$type
         GET https://$SERVER/api/info/metrics/$type/toMonth/$YYYY-DD
@@ -700,7 +776,7 @@ class MetricsApi(Api):
             url += "/toMonth/{0}".format(date_str)
         return self.get_request(url, auth=auth)
 
-    def past_days(self, data_type, days_str, auth=False):
+    def past_days(self, data_type, days_str, auth=DEPRECATION_GUARD):
         """
 
         http://guides.dataverse.org/en/4.18.1/api/metrics.html
@@ -714,7 +790,7 @@ class MetricsApi(Api):
         )
         return self.get_request(url, auth=auth)
 
-    def get_dataverses_by_subject(self, auth=False):
+    def get_dataverses_by_subject(self, auth=DEPRECATION_GUARD):
         """
         GET https://$SERVER/api/info/metrics/dataverses/bySubject
 
@@ -724,7 +800,7 @@ class MetricsApi(Api):
         url = "{0}/dataverses/bySubject".format(self.base_url_api_metrics)
         return self.get_request(url, auth=auth)
 
-    def get_dataverses_by_category(self, auth=False):
+    def get_dataverses_by_category(self, auth=DEPRECATION_GUARD):
         """
         GET https://$SERVER/api/info/metrics/dataverses/byCategory
 
@@ -734,7 +810,7 @@ class MetricsApi(Api):
         url = "{0}/dataverses/byCategory".format(self.base_url_api_metrics)
         return self.get_request(url, auth=auth)
 
-    def get_datasets_by_subject(self, date_str=None, auth=False):
+    def get_datasets_by_subject(self, date_str=None, auth=DEPRECATION_GUARD):
         """
         GET https://$SERVER/api/info/metrics/datasets/bySubject
 
@@ -746,7 +822,7 @@ class MetricsApi(Api):
             url += "/toMonth/{0}".format(date_str)
         return self.get_request(url, auth=auth)
 
-    def get_datasets_by_data_location(self, data_location, auth=False):
+    def get_datasets_by_data_location(self, data_location, auth=DEPRECATION_GUARD):
         """
         GET https://$SERVER/api/info/metrics/datasets/bySubject
 
@@ -795,7 +871,7 @@ class NativeApi(Api):
         super().__init__(base_url, api_token, api_version, auth=auth)
         self.base_url_api_native = self.base_url_api
 
-    def get_dataverse(self, identifier, auth=False):
+    def get_dataverse(self, identifier, auth=DEPRECATION_GUARD):
         """Get dataverse metadata by alias or id.
 
         View metadata about a dataverse.
@@ -1036,7 +1112,7 @@ class NativeApi(Api):
         url = "{0}/dataverses/{1}/contents".format(self.base_url_api_native, identifier)
         return self.get_request(url, auth=auth)
 
-    def get_dataverse_assignments(self, identifier, auth=False):
+    def get_dataverse_assignments(self, identifier, auth=DEPRECATION_GUARD):
         """Get dataverse assignments by alias or id.
 
         View assignments of a dataverse.
@@ -1062,7 +1138,7 @@ class NativeApi(Api):
         )
         return self.get_request(url, auth=auth)
 
-    def get_dataverse_facets(self, identifier, auth=False):
+    def get_dataverse_facets(self, identifier, auth=DEPRECATION_GUARD):
         """Get dataverse facets by alias or id.
 
         View facets of a dataverse.
@@ -1086,7 +1162,7 @@ class NativeApi(Api):
         url = "{0}/dataverses/{1}/facets".format(self.base_url_api_native, identifier)
         return self.get_request(url, auth=auth)
 
-    def dataverse_id2alias(self, dataverse_id, auth=False):
+    def dataverse_id2alias(self, dataverse_id, auth=DEPRECATION_GUARD):
         """Converts a Dataverse ID to an alias.
 
         Parameters
@@ -1235,7 +1311,7 @@ class NativeApi(Api):
             )
         return self.get_request(url, auth=auth)
 
-    def get_dataset_export(self, pid, export_format, auth=False):
+    def get_dataset_export(self, pid, export_format, auth=DEPRECATION_GUARD):
         """Get metadata of dataset exported in different formats.
 
         Export the metadata of the current published version of a dataset
@@ -1944,7 +2020,7 @@ class NativeApi(Api):
             url += "/files/{0}/replace".format(identifier)
         return self.post_request(url, data=data, files=files, auth=True)
 
-    def get_info_version(self, auth=False):
+    def get_info_version(self, auth=DEPRECATION_GUARD):
         """Get the Dataverse version and build number.
 
         The response contains the version and build numbers. Requires no api
@@ -1965,7 +2041,7 @@ class NativeApi(Api):
         url = "{0}/info/version".format(self.base_url_api_native)
         return self.get_request(url, auth=auth)
 
-    def get_info_server(self, auth=False):
+    def get_info_server(self, auth=DEPRECATION_GUARD):
         """Get dataverse server name.
 
         This is useful when a Dataverse system is composed of multiple Java EE
@@ -1986,7 +2062,7 @@ class NativeApi(Api):
         url = "{0}/info/server".format(self.base_url_api_native)
         return self.get_request(url, auth=auth)
 
-    def get_info_api_terms_of_use(self, auth=False):
+    def get_info_api_terms_of_use(self, auth=DEPRECATION_GUARD):
         """Get API Terms of Use url.
 
         The response contains the text value inserted as API Terms of use which
@@ -2007,7 +2083,7 @@ class NativeApi(Api):
         url = "{0}/info/apiTermsOfUse".format(self.base_url_api_native)
         return self.get_request(url, auth=auth)
 
-    def get_metadatablocks(self, auth=False):
+    def get_metadatablocks(self, auth=DEPRECATION_GUARD):
         """Get info about all metadata blocks.
 
         Lists brief info about all metadata blocks registered in the system.
@@ -2027,7 +2103,7 @@ class NativeApi(Api):
         url = "{0}/metadatablocks".format(self.base_url_api_native)
         return self.get_request(url, auth=auth)
 
-    def get_metadatablock(self, identifier, auth=False):
+    def get_metadatablock(self, identifier, auth=DEPRECATION_GUARD):
         """Get info about single metadata block.
 
         Returns data about the block whose identifier is passed. identifier can
@@ -2053,7 +2129,7 @@ class NativeApi(Api):
         url = "{0}/metadatablocks/{1}".format(self.base_url_api_native, identifier)
         return self.get_request(url, auth=auth)
 
-    def get_user_api_token_expiration_date(self, auth=False):
+    def get_user_api_token_expiration_date(self, auth=DEPRECATION_GUARD):
         """Get the expiration date of an Users's API token.
 
         HTTP Request:
@@ -2132,7 +2208,7 @@ class NativeApi(Api):
         url = "{0}/roles?dvo={1}".format(self.base_url_api_native, dataverse_id)
         return self.post_request(url)
 
-    def show_role(self, role_id, auth=False):
+    def show_role(self, role_id, auth=DEPRECATION_GUARD):
         """Show role.
 
         `Docs <https://guides.dataverse.org/en/latest/api/native-api.html#show-role>`_
@@ -2475,7 +2551,7 @@ class SearchApi(Api):
         filter_query=None,
         show_entity_ids=None,
         query_entities=None,
-        auth=False,
+        auth=DEPRECATION_GUARD,
     ):
         """Search.
 
