@@ -91,7 +91,7 @@ class Api:
             <https://www.python-httpx.org/advanced/authentication/>`_.
         Examples
         -------
-        Create an Api connection::
+        Create an API connection::
 
         .. code-block::
 
@@ -861,7 +861,7 @@ class NativeApi(Api):
         Parameters
         ----------
         native_api_version : str
-            Api version of Dataverse native api. Default is `v1`.
+            API version of Dataverse native API. Default is `v1`.
 
         """
         super().__init__(base_url, api_token, api_version, auth=auth)
